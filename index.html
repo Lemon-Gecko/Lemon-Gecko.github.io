@@ -1,25 +1,691 @@
 <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
 <head>
-	<title>HTML and CSS "Hello World"</title>
-	<style>
-		body {
-			background-color: #2D2D2D;
-		}
-		
-		h1 {
-			color: #C26356;
-			font-size: 30px;
-			font-family: Menlo, Monaco, fixed-width;
-		}
-		
-		p {
-			color: white;
-			font-family: "Source Code Pro", Menlo, Monaco, fixed-width;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lemon Gecko | Creativity & Technology iOS Studio</title>
+    <meta name="description" content="Design-led iOS engineering portfolio for Lemon Gecko, blending creativity and technology across energy monitors, AI sound recognition, and spatial UI experiments.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Hanken Grotesk"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#FACC15', // Lemon Yellow
+                        secondary: '#22C55E', // Gecko Green
+                        surface: '#FCFDF7',
+                        'on-surface': '#064E3B',
+                        'on-surface-variant': '#065F46',
+                        'surface-container-low': '#F7F9EE',
+                        'surface-container-highest': '#ECF1D9',
+                    },
+                    spacing: {
+                        'margin-desktop': '40px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer base {
+            * { @apply rounded-none; }
+            body { 
+                background-color: #FCFDF7; 
+                color: #064E3B;
+                @apply antialiased font-sans; 
+            }
+            .selection-custom::selection { background-color: #FACC15; color: #064E3B; }
+        }
+        @layer utilities {
+            .text-display-lg { @apply text-[44px] md:text-[80px] font-black leading-[1.0] tracking-[-0.04em]; }
+            .text-headline-md { @apply text-[24px] font-semibold leading-[1.2] tracking-[-0.01em]; }
+            .reveal { @apply opacity-0 translate-y-8 transition-all duration-700 ease-out; }
+            .reveal.active { @apply opacity-100 translate-y-0; }
+            .squircle { 
+                mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><path d="M40 0C67.6142 0 80 12.3858 80 40C80 67.6142 67.6142 80 40 80C12.3858 80 0 67.6142 0 40C0 12.3858 12.3858 0 40 0Z" fill="black"/></svg>');
+                mask-size: contain;
+                mask-repeat: no-repeat;
+                mask-position: center;
+                -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><path d="M40 0C67.6142 0 80 12.3858 80 40C80 67.6142 67.6142 80 40 80C12.3858 80 0 67.6142 0 40C0 12.3858 12.3858 0 40 0Z" fill="black"/></svg>');
+                -webkit-mask-size: contain;
+            }
+        }
+    </style>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
-	<h1>Hello World Example</h1>
-	<p>This is a very basic "Hello World" example made up in HTML and CSS. See if you can change the size of the header text above.</p>
+<body class="selection-custom overflow-x-hidden min-h-screen">
+
+    <!-- Top Navbar -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-surface-container-highest transition-all">
+        <div class="max-w-[1440px] mx-auto px-margin-desktop h-20 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-4 active:scale-95 transition-transform">
+                <div class="h-12 w-auto">
+                    <img src="lemon_gecko_logo.png" alt="Lemon Gecko" class="h-full w-auto object-contain">
+                </div>
+                <div class="flex flex-col -gap-1">
+                    <span class="font-black text-2xl tracking-tighter uppercase leading-none text-on-surface">LEMON GECKO</span>
+                    <span class="text-[10px] font-bold tracking-[0.2em] uppercase text-secondary">Creativity & Technology</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex gap-10 items-center">
+                <a href="#portfolio" class="text-sm font-semibold uppercase tracking-widest hover:text-secondary transition-colors hover:bg-surface-container-low px-2 py-1">Portfolio</a>
+                <a href="#process" class="text-sm font-semibold uppercase tracking-widest hover:text-secondary transition-colors hover:bg-surface-container-low px-2 py-1">Process</a>
+                <a href="https://apps.apple.com/my/developer/tiago-mendes/id1235886918" target="_blank" rel="noopener noreferrer" class="bg-secondary text-white text-sm font-semibold uppercase tracking-widest px-6 py-3 hover:bg-on-surface transition-colors active:scale-95 text-center">AppStore</a>
+            </div>
+
+            <button id="mobile-menu-btn" class="md:hidden text-on-surface p-2">
+                <i data-lucide="menu" size="24"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="hidden absolute top-20 left-0 w-full bg-white border-b border-surface-container-highest p-8 flex flex-col gap-6 md:hidden">
+            <a href="#portfolio" class="text-lg font-bold uppercase tracking-widest">Portfolio</a>
+            <a href="#process" class="text-lg font-bold uppercase tracking-widest">Process</a>
+            <a href="https://apps.apple.com/my/developer/tiago-mendes/id1235886918" target="_blank" rel="noopener noreferrer" class="bg-secondary text-white text-center py-4 font-bold uppercase tracking-widest">AppStore</a>
+        </div>
+    </nav>
+
+    <!-- Floating Scroll to Top -->
+    <button id="scroll-top" class="fixed bottom-8 right-8 z-50 bg-on-surface text-white p-4 hover:bg-secondary transition-all opacity-0 scale-80 pointer-events-none border border-on-surface">
+        <i data-lucide="arrow-up-right" class="-rotate-45" size="20"></i>
+    </button>
+
+    <main class="max-w-[1440px] mx-auto pt-20">
+        <div id="main-view">
+            <!-- Hero Section -->
+        <section id="about" class="px-margin-desktop py-24 md:py-32 grid grid-cols-1 md:grid-cols-12 gap-10 items-center border-b border-surface-container-highest">
+            <div class="md:col-span-8 reveal">
+                <h1 class="text-display-lg uppercase">
+                    Explore My<br>
+                    Native Tools.<br>
+                    <span class="text-secondary">Lemon Gecko Apps.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-on-surface-variant max-w-2xl mt-8 border-l-2 border-secondary pl-6 leading-relaxed">
+                    I am focused on crafting high-performance, design-led iOS applications. This laboratory showcases my experiments in IoT, hardware monitoring, and smart utility design. Try them out on the App Store.
+                </p>
+                <div class="mt-12 flex flex-wrap gap-4">
+                    <a href="#portfolio" class="bg-secondary text-white text-sm font-bold uppercase tracking-widest px-10 py-5 hover:bg-on-surface transition-colors active:scale-95">
+                        Download My Apps
+                    </a>
+                    <a href="https://apps.apple.com/my/developer/tiago-mendes/id1235886918" target="_blank" rel="noopener noreferrer" class="bg-surface-container-highest text-on-surface text-sm font-bold uppercase tracking-widest px-10 py-5 hover:bg-secondary hover:text-white transition-colors active:scale-95 flex items-center gap-2">
+                        App Store Profile <i data-lucide="arrow-up-right" size="18"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="md:col-span-4 hidden md:block reveal">
+                <div class="w-full aspect-square bg-surface-container-low border border-surface-container-highest relative flex items-center justify-center overflow-hidden group">
+                    <div class="w-3/4 h-3/4 border-2 border-primary absolute rotate-12 group-hover:border-secondary transition-colors duration-500 animate-[spin_20s_linear_infinite]"></div>
+                    <div class="w-1/2 h-1/2 bg-on-surface absolute -rotate-6 group-hover:rotate-0 transition-transform duration-500 rounded-full"></div>
+                    <img src="lemon_gecko_logo.png" alt="Lemon Gecko" class="w-3/4 h-auto relative z-10 group-hover:scale-110 transition-transform duration-500">
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="px-margin-desktop py-24 border-b border-surface-container-highest">
+            <div class="flex justify-between items-end mb-16 border-b border-surface-container-highest pb-6 reveal">
+                <h2 class="text-display-lg text-4xl md:text-5xl uppercase">Selected Works</h2>
+                <span class="text-sm font-semibold text-on-surface-variant uppercase tracking-[0.2em] hidden md:block">
+                    Index 01 — 05
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10" id="projects-grid">
+                <!-- Project 1 -->
+                <article onclick="showDetail('watt')" class="reveal group border border-surface-container-highest hover:border-secondary transition-all bg-white flex flex-col cursor-pointer">
+                    <div class="aspect-[4/3] bg-surface-container-highest overflow-hidden relative border-b border-surface-container-highest">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4b/a5/7e/4ba57e52-1f8d-58ab-6b28-7fed54c841d2/iPhone_XS_Max_18.png/720x0w.png" alt="WATT FOR SMART DEVICES" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
+                        <div class="absolute top-4 right-4 bg-primary text-on-surface px-3 py-1 text-xs font-bold border border-secondary uppercase tracking-widest">v6.0.4</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[10px] font-bold text-secondary tracking-[0.3em] uppercase">01</span>
+                                <h3 class="text-headline-md uppercase tracking-tight leading-none group-hover:text-secondary transition-colors">WATT FOR SMART DEVICES</h3>
+                            </div>
+                            <div class="w-12 h-12 flex items-center justify-center squircle overflow-hidden shrink-0 border border-surface-container-highest group-hover:rotate-6 transition-transform duration-300">
+                                <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2a/09/a2/2a09a225-33c0-b22d-3024-5406b8e32e69/Placeholder.mill/200x200bb-75.webp" class="w-full h-full object-cover" alt="Watt Icon">
+                            </div>
+                        </div>
+                        <p class="text-on-surface-variant text-base leading-relaxed flex-grow">Energy monitoring for TP-Link Tapo and Kasa. Track your consumption, set alerts, and optimize your energy usage from a single dashboard.</p>
+                        <div class="flex items-center justify-between pt-8 border-t border-surface-container-highest mt-8">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 border border-surface-container-highest text-[10px] font-bold text-on-surface-variant uppercase tracking-widest group-hover:border-secondary/30 transition-colors">IOT</span>
+                                <span class="px-2 py-1 border border-surface-container-highest text-[10px] font-bold text-on-surface-variant uppercase tracking-widest group-hover:border-secondary/30 transition-colors">SMART HOME</span>
+                            </div>
+                            <div class="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-1 group/link">
+                                v6.0.4 <i data-lucide="arrow-right" size="14"></i>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 2 -->
+                <article onclick="showDetail('humidity')" class="reveal group border border-surface-container-highest hover:border-secondary transition-all bg-white flex flex-col cursor-pointer">
+                    <div class="aspect-[4/3] bg-surface-container-highest overflow-hidden relative border-b border-surface-container-highest">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/48/ef/64/48ef6431-32c3-60dc-3b29-c5db9fb5ff16/app_store_5.5_6.1.jpg/460x0w.png" alt="HUMIDITY WINDOW - STOẞLÜFTEN" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
+                        <div class="absolute top-4 right-4 bg-primary text-on-surface px-3 py-1 text-xs font-bold border border-secondary uppercase tracking-widest">v2.3.1</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[10px] font-bold text-secondary tracking-[0.3em] uppercase">02</span>
+                                <h3 class="text-headline-md uppercase tracking-tight leading-none group-hover:text-secondary transition-colors">HUMIDITY WINDOW - STOẞLÜFTEN</h3>
+                            </div>
+                            <div class="w-12 h-12 flex items-center justify-center squircle overflow-hidden shrink-0 border border-surface-container-highest group-hover:rotate-6 transition-transform duration-300">
+                                <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b7/8f/d7/b78fd737-8795-1ea1-2057-ea2b16c9f0c4/Placeholder.mill/200x200bb-75.webp" class="w-full h-full object-cover" alt="Humidity Icon">
+                            </div>
+                        </div>
+                        <p class="text-on-surface-variant text-base leading-relaxed flex-grow">Indoor & Outdoor Humidity differentials. Stop lüften effectively by calculating exactly when to ventilate for optimal domestic health.</p>
+                        <div class="flex items-center justify-between pt-8 border-t border-surface-container-highest mt-8">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 border border-surface-container-highest text-[10px] font-bold text-on-surface-variant uppercase tracking-widest group-hover:border-secondary/30 transition-colors">WEATHER</span>
+                                <span class="px-2 py-1 border border-surface-container-highest text-[10px] font-bold text-on-surface-variant uppercase tracking-widest group-hover:border-secondary/30 transition-colors">UTILITIES</span>
+                            </div>
+                            <div class="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-1 group/link">
+                                v2.3.1 <i data-lucide="arrow-right" size="14"></i>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 3 -->
+                <article onclick="showDetail('mealprep')" class="reveal group border border-surface-container-highest hover:border-secondary transition-all bg-white flex flex-col cursor-pointer">
+                    <div class="aspect-[4/3] bg-surface-container-highest overflow-hidden relative border-b border-surface-container-highest">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8e/6b/aa/8e6baa59-ff75-19fd-c9e2-43b7792253cc/app_store_6.5_3.2.png/720x0w.png" alt="MEAL PREP FOR BATCH COOKING UK" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
+                        <div class="absolute top-4 right-4 bg-primary text-on-surface px-3 py-1 text-xs font-bold border border-secondary uppercase tracking-widest">v4.8.2</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[10px] font-bold text-secondary tracking-[0.3em] uppercase">03</span>
+                                <h3 class="text-headline-md uppercase tracking-tight leading-none group-hover:text-secondary transition-colors">MEAL PREP FOR BATCH COOKING UK</h3>
+                            </div>
+                            <div class="w-12 h-12 flex items-center justify-center squircle overflow-hidden shrink-0 border border-surface-container-highest group-hover:rotate-6 transition-transform duration-300">
+                                <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/33/49/26/33492636-2287-138f-d446-89ce0f04fcd5/Placeholder.mill/200x200bb-75.webp" class="w-full h-full object-cover" alt="Meal Prep Icon">
+                            </div>
+                        </div>
+                        <p class="text-on-surface-variant text-base leading-relaxed flex-grow">Intelligent planning for batch cooking. Organize meals and shopping lists with precision engineering and specific UK standard localization.</p>
+                        <div class="flex items-center justify-between pt-8 border-t border-surface-container-highest mt-8">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 border border-surface-container-highest text-[10px] font-bold text-on-surface-variant uppercase tracking-widest group-hover:border-secondary/30 transition-colors">FOOD & DRINK</span>
+                            </div>
+                            <div class="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-1 group/link">
+                                v4.8.2 <i data-lucide="arrow-right" size="14"></i>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 4: Retro Terminal -->
+                <article onclick="showDetail('retro')" class="reveal group border border-surface-container-highest hover:border-secondary transition-all bg-white flex flex-col cursor-pointer">
+                    <div class="aspect-[4/3] bg-surface-container-highest overflow-hidden relative border-b border-surface-container-highest">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/3c/d0/37/3cd037d4-af2b-d731-d9c6-b1d98a008079/43ab8bd8-9d09-4060-9552-8f7d50080f94_simulator_screenshot_69015BB6-60C7-4602-8D2D-F76CB141F0FD.png/313x235bb.webp" alt="RETRO TERMINAL" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[10px] font-bold text-secondary tracking-[0.3em] uppercase">04</span>
+                                <h3 class="text-headline-md uppercase tracking-tight leading-none group-hover:text-secondary transition-colors">RETRO SYSTEM MONITOR TERMINAL</h3>
+                            </div>
+                            <div class="w-12 h-12 flex items-center justify-center squircle overflow-hidden shrink-0 border border-surface-container-highest group-hover:rotate-6 transition-transform duration-300">
+                                <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/81/c9/ea/81c9ea2e-596b-d167-8f99-307c44e7256a/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/1200x630bb.png" class="w-full h-full object-cover" alt="Retro Icon">
+                            </div>
+                        </div>
+                        <p class="text-on-surface-variant text-base leading-relaxed flex-grow">A modular system monitor with a vintage terminal aesthetic. Tracks real-time CPU, Memory, Disk, and Network usage with high-fidelity precision.</p>
+                        <div class="flex items-center justify-between pt-8 border-t border-surface-container-highest mt-8">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 border border-surface-container-highest text-[10px] font-bold text-on-surface-variant uppercase tracking-widest group-hover:border-secondary/30 transition-colors">TERMINAL</span>
+                            </div>
+                            <div class="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-1 group/link">
+                                v3.1.2 <i data-lucide="arrow-right" size="14"></i>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Project 5 -->
+                <article onclick="showDetail('gamepod')" class="reveal group border border-surface-container-highest hover:border-secondary transition-all bg-white flex flex-col cursor-pointer">
+                    <div class="aspect-[4/3] bg-surface-container-highest overflow-hidden relative border-b border-surface-container-highest">
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5a/43/68/5a436801-82e4-cfb2-be02-2aed0ac7e601/simulator_screenshot_0A12D6B4-49E4-403C-AA0C-65C27A7E1D70.png/720x0w.png" alt="GAMEPOD XL - 2" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out">
+                        <div class="absolute top-4 right-4 bg-primary text-on-surface px-3 py-1 text-xs font-bold border border-secondary uppercase tracking-widest">v1.2.0</div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="flex flex-col gap-1">
+                                <span class="text-[10px] font-bold text-secondary tracking-[0.3em] uppercase">05</span>
+                                <h3 class="text-headline-md uppercase tracking-tight leading-none group-hover:text-secondary transition-colors">GAMEPOD XL - 2</h3>
+                            </div>
+                            <div class="w-12 h-12 flex items-center justify-center squircle overflow-hidden shrink-0 border border-surface-container-highest group-hover:rotate-6 transition-transform duration-300">
+                                <img src="https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/71/2b/5b/712b5b1f-7f6f-d319-ecea-ec753db576c7/Placeholder.mill/200x200bb-75.webp" class="w-full h-full object-cover" alt="GamePod Icon">
+                            </div>
+                        </div>
+                        <p class="text-on-surface-variant text-base leading-relaxed flex-grow">Multi-system game companion. Explore and organize your retro gaming stats and assets in a hardware-inspired aesthetic.</p>
+                        <div class="flex items-center justify-between pt-8 border-t border-surface-container-highest mt-8">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 border border-surface-container-highest text-[10px] font-bold text-on-surface-variant uppercase tracking-widest group-hover:border-secondary/30 transition-colors">GAMES</span>
+                                <span class="px-2 py-1 border border-surface-container-highest text-[10px] font-bold text-on-surface-variant uppercase tracking-widest group-hover:border-secondary/30 transition-colors">UTILITIES</span>
+                            </div>
+                            <div class="text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-1 group/link">
+                                v1.2.0 <i data-lucide="arrow-right" size="14"></i>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Stack Section -->
+        <section class="px-margin-desktop py-24 border-b border-surface-container-highest bg-on-surface text-white">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+                <div class="md:col-span-4 reveal">
+                    <h2 class="text-4xl uppercase font-black tracking-tighter mb-6 text-primary">Tech Protocol</h2>
+                    <p class="text-gray-400 leading-relaxed uppercase text-sm tracking-widest">
+                        Systematic application of modern engineering standards for robust iOS ecosystems.
+                    </p>
+                </div>
+                <div class="md:col-span-8 grid grid-cols-2 lg:grid-cols-4 gap-8 reveal">
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-xs font-bold text-primary tracking-[0.3em] uppercase border-b border-white/10 pb-2">Frameworks</h3>
+                        <ul class="flex flex-col gap-2">
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> SwiftUI</li>
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> Swift</li>
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> UIKit</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-xs font-bold text-primary tracking-[0.3em] uppercase border-b border-white/10 pb-2">Infrastructure</h3>
+                        <ul class="flex flex-col gap-2">
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> CloudKit</li>
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> Firebase</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-xs font-bold text-primary tracking-[0.3em] uppercase border-b border-white/10 pb-2">Intelligence</h3>
+                        <ul class="flex flex-col gap-2">
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> CoreML</li>
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> Vision</li>
+                        </ul>
+                    </div>
+                    <div class="flex flex-col gap-4">
+                        <h3 class="text-xs font-bold text-primary tracking-[0.3em] uppercase border-b border-white/10 pb-2">Design Tools</h3>
+                        <ul class="flex flex-col gap-2">
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> Figma</li>
+                            <li class="text-sm font-semibold tracking-wide uppercase opacity-70 hover:opacity-100 transition-opacity flex items-center gap-2"><div class="w-1 h-1 bg-secondary"></div> Apple HIG</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Methodology Section -->
+        <section id="process" class="px-margin-desktop py-24 border-b border-surface-container-highest">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
+                <div class="md:col-span-4 border-r border-surface-container-highest pr-10 reveal">
+                    <h2 class="text-4xl uppercase font-black tracking-tighter mb-6">Methodology</h2>
+                    <p class="text-on-surface-variant leading-relaxed">
+                        Our process is analytical, systematic, and transparent. We build upon solid architectural foundations to deliver predictable, high-fidelity results.
+                    </p>
+                </div>
+                <div class="md:col-span-8 flex flex-col">
+                    <!-- Step 1 -->
+                    <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-6 py-10 border-b border-surface-container-highest">
+                        <div class="md:col-span-2 text-3xl font-black text-secondary">01</div>
+                        <div class="md:col-span-10">
+                            <h3 class="text-2xl font-bold uppercase tracking-tight mb-3">Creative Synthesis</h3>
+                            <p class="text-on-surface-variant text-lg leading-relaxed">Fusing innovative concepts with practical technical requirements. Where imagination meets implementation logic.</p>
+                        </div>
+                    </div>
+                    <!-- Step 2 -->
+                    <div class="reveal grid grid-cols-1 md:grid-cols-12 gap-6 py-10 border-b border-surface-container-highest">
+                        <div class="md:col-span-2 text-3xl font-black text-secondary">02</div>
+                        <div class="md:col-span-10">
+                            <h3 class="text-2xl font-bold uppercase tracking-tight mb-3">Component Engineering</h3>
+                            <p class="text-on-surface-variant text-lg leading-relaxed">Constructing reusable, strict UI components mapped perfectly to iOS Human Interface Guidelines.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section id="contact" class="px-margin-desktop py-32 bg-surface-container-low flex flex-col items-center text-center gap-8 border-b border-surface-container-highest relative overflow-hidden group">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary to-transparent opacity-30"></div>
+            <img src="lemon_gecko_logo.png" alt="Lemon Gecko" class="w-16 h-16 animate-pulse">
+            <h2 class="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] max-w-4xl relative z-10 reveal">
+                Experience the Quality.
+            </h2>
+            <p class="text-xl text-on-surface-variant max-w-2xl leading-relaxed relative z-10 reveal">
+                Download our latest releases on the App Store and experience precision-engineered iOS tools today.
+            </p>
+            <div class="flex flex-col md:flex-row gap-4 mt-8 relative z-10 reveal">
+                <a href="https://apps.apple.com/my/developer/tiago-mendes/id1235886918" target="_blank" rel="noopener noreferrer" class="bg-on-surface text-white text-sm font-bold uppercase tracking-widest px-10 py-5 hover:bg-secondary transition-colors border border-on-surface active:scale-95 text-center">
+                    AppStore
+                </a>
+            </section>
+        </div>
+
+        <!-- Detail View Container -->
+        <div id="detail-view" class="hidden min-h-screen bg-surface px-margin-desktop py-12 md:py-24">
+            <button onclick="hideDetail()" class="mb-12 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-secondary hover:text-on-surface transition-colors active:scale-95">
+                <i data-lucide="arrow-left" size="18"></i> Back to Portfolio
+            </button>
+            
+            <div id="detail-content" class="fade-in">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-16 bg-white border-t border-surface-container-highest">
+        <div class="max-w-[1440px] mx-auto px-margin-desktop flex flex-col gap-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="flex items-center gap-6">
+                    <div class="h-8 w-auto">
+                        <img src="lemon_gecko_logo.png" alt="Lemon Gecko" class="h-full w-auto object-contain">
+                    </div>
+                    <span class="font-black text-2xl tracking-tighter uppercase text-on-surface">LEMON GECKO</span>
+                    <span class="text-secondary hidden md:block">|</span>
+                    <span class="text-sm font-semibold text-on-surface-variant hidden md:block uppercase tracking-widest">NATIVE TOOLS LAB.</span>
+                </div>
+            </div>
+            
+            <div class="text-center py-6 border-t border-surface-container-highest">
+                <p class="text-xs font-semibold text-on-surface-variant uppercase tracking-widest leading-loose">
+                    © <span id="year"></span> LEMON GECKO. ENGINEERED WITH PRECISION.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const projectData = {
+            "watt": {
+                title: "Watt for Smart Devices",
+                short: "Energy monitoring for TP-Link Tapo and Kasa.",
+                version: "6.0.4",
+                release: "2019",
+                category: "Utilities / Smart Home",
+                platform: "iOS / iPadOS / macOS",
+                stack: ["SwiftUI", "Combine", "CoreML", "CloudKit"],
+                logo: "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/2a/09/a2/2a09a225-33c0-b22d-3024-5406b8e32e69/Placeholder.mill/200x200bb-75.webp",
+                about: "Smart home energy monitoring made simple. Support for TP-Link Tapo and Kasa. Track your consumption, set alerts, and optimize your energy usage from a single dashboard. Monitor your home energy consumption in real-time. Compatible with a variety of smart plugs and meters like TP-Link Tapo and Kasa.",
+                highlights: [
+                    { icon: "zap", title: "Real-time Metrics", desc: "Live tracking of power consumption with sub-second latency from IoT devices." },
+                    { icon: "bar-chart-3", title: "Historical Trends", desc: "Long-term data analysis for cost optimization and identifying energy-hog appliances." }
+                ],
+                screenshots: [
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/fb/5f/9d/fb5f9d3f-dbe8-b518-3a1a-758ee190215f/iPhone_XS_Max_19.png/720x0w.png",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/4b/a5/7e/4ba57e52-1f8d-58ab-6b28-7fed54c841d2/iPhone_XS_Max_18.png/720x0w.png",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/f1/b7/0a/f1b70a83-bf2e-0b07-97f2-b9812349829e/edf94996-1e4e-4180-bce7-4bdb3ab3c78f_iPhone_XS_Max_3.png/720x0w.png"
+                ],
+                link: "https://apps.apple.com/app/watt-for-smart-devices/id1465004830"
+            },
+            "humidity": {
+                title: "Humidity Window - Stoßlüften",
+                short: "Indoor & Outdoor Humidity differentials.",
+                version: "2.3.1",
+                release: "2024",
+                category: "Weather / Utilities",
+                platform: "iOS / iPadOS / macOS",
+                stack: ["SwiftUI", "WeatherKit"],
+                logo: "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/b7/8f/d7/b78fd737-8795-1ea1-2057-ea2b16c9f0c4/Placeholder.mill/200x200bb-75.webp",
+                about: "Stop lüften effectively! Humidity Window calculates the outside absolute humidity and compares it to your indoor humidity to tell you exactly when to open your windows. It calculates the difference between indoor and outdoor absolute humidity to tell you when it's the right time to ventilate.",
+                highlights: [
+                    { icon: "thermometer", title: "Absolute Analytics", desc: "Moves beyond simple percentages to calculate actual water content in the air." },
+                    { icon: "bell", title: "Ventilation Alerts", desc: "Smart notifications when conditions are perfect for a fresh air cycle." }
+                ],
+                screenshots: [
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/48/ef/64/48ef6431-32c3-60dc-3b29-c5db9fb5ff16/app_store_5.5_6.1.jpg/460x0w.png",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/d5/c3/d9/d5c3d9d4-c872-c455-2317-030438e368db/app_store_5.5_6.3_widget.png/460x0w.png",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ef/0f/88/ef0f88e4-5036-562e-59ee-35f8cf8b0a60/app_store_5.5_6.3.jpg/460x0w.png"
+                ],
+                link: "https://apps.apple.com/app/humidity-window-sto%C3%9Fl%C3%BCften/id6742206262"
+            },
+            "mealprep": {
+                title: "Meal Prep for Batch Cooking UK",
+                short: "Intelligent planning for batch cooking.",
+                version: "4.8.2",
+                release: "2024",
+                category: "Food & Drink",
+                platform: "iOS / iPadOS / macOS",
+                stack: ["SwiftUI", "Combine", "CoreData"],
+                logo: "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/33/49/26/33492636-2287-138f-d446-89ce0f04fcd5/Placeholder.mill/200x200bb-75.webp",
+                about: "The ultimate app for planning your batch cooking. Organize your meals, generate shopping lists, and optimize your kitchen time with intelligent prep steps. Intelligent planning for batch cooking and meal prepping.",
+                highlights: [
+                    { icon: "shopping-bag", title: "Intelligent Lists", desc: "Automatically groups ingredients by supermarket category for speed." },
+                    { icon: "scale", title: "Portion Control", desc: "Scientific macros calculation per batch to ensure consistent nutrition goals." }
+                ],
+                screenshots: [
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/3e/29/27/3e2927a4-0846-41c4-202f-ae62cd4153d9/app_store_6.5_3.1.png/720x0w.png",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/8e/6b/aa/8e6baa59-ff75-19fd-c9e2-43b7792253cc/app_store_6.5_3.2.png/720x0w.png",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/74/32/7e/74327ef5-0414-a871-faae-8d3e203f7ea1/app_store_6.5_3.4.png/720x0w.png"
+                ],
+                link: "https://apps.apple.com/app/meal-prep-for-batch-cooking/id1533038676"
+            },
+            "retro": {
+                title: "Retro System Monitor Terminal",
+                short: "Classic terminal-style device monitor.",
+                version: "3.1.2",
+                release: "2023",
+                category: "Utilities",
+                platform: "iPadOS / tvOS",
+                stack: ["SwiftUI", "Combine", "CoreData"],
+                logo: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/81/c9/ea/81c9ea2e-596b-d167-8f99-307c44e7256a/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/1200x630bb.png",
+                about: "Retro System Monitor Terminal is a beautiful system monitor that lets you track your device's vital stats in a nostalgic terminal interface. Track CPU usage, RAM, disk space, and network throughput with nostalgic aesthetics.",
+                highlights: [
+                    { icon: "activity", title: "Real-time Metrics", desc: "Live tracking of system resources with historical CRT-style graphs." },
+                    { icon: "palette", title: "Customizable Themes", desc: "Choose between Amber, Green, or Cyan monochrome styles with scanlines." }
+                ],
+                screenshots: [
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/42/60/5b/42605b12-5e0c-4869-a440-021fb2d598f1/2bb5a0d2-791d-4cfb-8886-0020089f9e19_simulator_screenshot_C83EB488-B73E-4255-A981-DA12F9C5893E.png/471x1024.jpeg",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource116/v4/ae/c3/a2/aec3a269-2e6c-a655-ec78-76e9a57753fa/5c4ba061-3f1f-438e-a373-e9e2e146f978_simulator_screenshot_BDAC41B5-F9A5-4096-9510-D584BDFEDB90.png/471x1024.jpeg",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource126/v4/28/39/86/28398693-9a24-a521-bd21-d03cd7d45307/5c750dc6-b73b-40d8-ad5f-c74ced4a31d0_simulator_screenshot_EC9C9B2E-CDEE-4D89-A425-C9108BDAB6A9.png/471x1024.jpeg"
+                ],
+                link: "https://apps.apple.com/app/retro-system-monitor/id1534062635"
+            },
+            "gamepod": {
+                title: "GamePod XL - 2",
+                short: "Multi-system game companion.",
+                version: "1.2.0",
+                release: "2024",
+                category: "Games / Utilities",
+                platform: "iOS / iPadOS / macOS",
+                stack: ["SwiftUI", "SpriteKit", "GameKit"],
+                logo: "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/71/2b/5b/712b5b1f-7f6f-d319-ecea-ec753db576c7/Placeholder.mill/200x200bb-75.webp",
+                about: "GamePod XL - 2 is a multi-system game companion designed for aesthetics and performance. Experience your retro gaming assets through a high-performance, hardware-inspired interface optimized for portability.",
+                highlights: [
+                    { icon: "gamepad-2", title: "Low Latency", desc: "Optimized input handling for a seamless classic gaming experience." },
+                    { icon: "folder", title: "Library Architecture", desc: "Systematic organization of your retro assets with smart metadata." }
+                ],
+                screenshots: [
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5a/43/68/5a436801-82e4-cfb2-be02-2aed0ac7e601/simulator_screenshot_0A12D6B4-49E4-403C-AA0C-65C27A7E1D70.png/720x0w.png",
+                    "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/e4/11/ca/e411ca32-0e92-d71e-169e-9652144adc47/simulator_screenshot_3807CCD5-E5A0-42B5-A4DF-BD1292474D5C.png/720x0w.png"
+                ],
+                link: "https://apps.apple.com/app/gamepod-xl-2/id6752308971"
+            }
+        };
+
+        function showDetail(id) {
+            const data = projectData[id];
+            if (!data) return;
+
+            const detailView = document.getElementById('detail-view');
+            const mainView = document.getElementById('main-view');
+            const content = document.getElementById('detail-content');
+
+            content.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <!-- Top Header -->
+                    <div class="lg:col-span-8 flex flex-col md:flex-row gap-8 items-start mb-12">
+                        <div class="w-32 h-32 bg-white flex items-center justify-center squircle shadow-2xl shrink-0 overflow-hidden border border-surface-container-highest">
+                            <img src="${data.logo}" class="w-full h-full object-cover" alt="Icon">
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none">${data.title}</h2>
+                            <p class="text-xl text-on-surface-variant max-w-xl leading-relaxed">${data.short}</p>
+                            <a href="${data.link}" target="_blank" class="mt-4 inline-flex items-center gap-3 bg-primary text-on-surface px-8 py-4 text-sm font-bold uppercase tracking-widest hover:bg-secondary hover:text-white transition-all active:scale-95 w-fit">
+                                <i data-lucide="download" size="18"></i> Download on App Store
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Technical Sidebar -->
+                    <div class="lg:col-span-4 flex flex-col">
+                        <div class="bg-white border border-surface-container-highest p-8 flex flex-col gap-8">
+                            <h3 class="text-xs font-bold uppercase tracking-[0.3em] text-secondary border-b border-surface-container-highest pb-4">Technical Details</h3>
+                            <div class="flex flex-col gap-4">
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="font-medium text-on-surface-variant">Platform</span>
+                                    <span class="font-bold text-on-surface">${data.platform}</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="font-medium text-on-surface-variant">Category</span>
+                                    <span class="font-bold text-on-surface">${data.category}</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="font-medium text-on-surface-variant">Release Date</span>
+                                    <span class="font-bold text-on-surface">${data.release}</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="font-medium text-on-surface-variant">Version</span>
+                                    <span class="font-bold text-on-surface">${data.version}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-4 pt-4 border-t border-surface-container-highest">
+                                <h4 class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Tech Stack</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    ${data.stack.map(s => `<span class="px-2 py-1 bg-surface-container-low border border-surface-container-highest text-[10px] font-bold uppercase tracking-widest">${s}</span>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main About Section -->
+                    <div class="lg:col-span-8 flex flex-col gap-12 py-12 border-t border-surface-container-highest">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                            <div>
+                                <h3 class="text-3xl font-black uppercase tracking-tighter mb-6">About the App</h3>
+                                <p class="text-on-surface-variant leading-relaxed text-lg italic border-l-4 border-secondary pl-6">${data.about}</p>
+                            </div>
+                            <div class="flex flex-col gap-8">
+                                ${data.highlights.map(h => `
+                                    <div class="flex gap-4">
+                                        <div class="w-12 h-12 bg-surface-container-low border border-surface-container-highest flex items-center justify-center shrink-0">
+                                            <i data-lucide="${h.icon}" class="text-secondary"></i>
+                                        </div>
+                                        <div class="flex flex-col gap-1">
+                                            <h4 class="font-bold uppercase text-sm tracking-tight">${h.title}</h4>
+                                            <p class="text-sm text-on-surface-variant leading-relaxed">${h.desc}</p>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gallery Section -->
+                    <div class="lg:col-span-12 py-12 border-t border-surface-container-highest">
+                        <h3 class="text-3xl font-black uppercase tracking-tighter mb-12">Interface Gallery</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            ${data.screenshots.map(s => `
+                                <div class="bg-white p-4 border border-surface-container-highest shadow-xl">
+                                    <div class="aspect-[9/19.5] w-full bg-surface-container-highest overflow-hidden">
+                                        <img src="${s}" class="w-full h-full object-cover" alt="Screenshot">
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            mainView.classList.add('hidden');
+            detailView.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
+        }
+
+        function hideDetail() {
+            const detailView = document.getElementById('detail-view');
+            const mainView = document.getElementById('main-view');
+            
+            detailView.classList.add('hidden');
+            mainView.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+
+        // Set dynamic year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close menu on link click
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // Scroll to top button & Navbar shadow
+        const scrollTopBtn = document.getElementById('scroll-top');
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollTopBtn.classList.remove('opacity-0', 'scale-80', 'pointer-events-none');
+            } else {
+                scrollTopBtn.classList.add('opacity-0', 'scale-80', 'pointer-events-none');
+            }
+
+            if (window.scrollY > 10) {
+                navbar.classList.add('py-2');
+            } else {
+                navbar.classList.remove('py-2');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Reveal animations on scroll
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(revealCallback, {
+            threshold: 0.1
+        });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
